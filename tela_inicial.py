@@ -1,4 +1,5 @@
 import pygame
+import sys
 
 pygame.init()
 
@@ -9,6 +10,10 @@ METEOR_HEIGHT = 38
 
 janela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption('Ameaça Interestelar')
+
+imagem_botao = pygame.image.load('imagens/start.png')
+botao = imagem_botao.get_rect(center=(390, 600))
+
 
 icone = pygame.image.load("imagens/logo.png")
 pygame.display.set_icon(icone)
@@ -26,14 +31,20 @@ game = True
 
 meteoro_x = 200
 meteoro_y = -METEOR_HEIGHT
-meteor_speedx = 3
-meteor_speedy = 4
+meteor_speedx = 2
+meteor_speedy = 2
 
 while game:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game = False
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            if botao.collidepoint(mouse_x, mouse_y):
+                print("Botão clicado!")
+
     
     meteoro_x += meteor_speedx
     meteoro_y += meteor_speedy
@@ -47,6 +58,8 @@ while game:
     janela.blit(tela_de_fundo, (0, 0))
     janela.blit(meteoro_pequeno, (meteoro_x, meteoro_y))
     janela.blit(logo, (150, 80))
+    janela.blit(imagem_botao, botao)
+
 
 
     pygame.display.update()  
