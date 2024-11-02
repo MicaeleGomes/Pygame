@@ -15,18 +15,44 @@ ALIEN_HEIGHT = 76
 font = pygame.font.SysFont(None, 48)
 background = pygame.image.load('imagens/SpaceBackGround.jpg').convert()
 alien_img = pygame.image.load('imagens/alien.png').convert_alpha()
-alien_img_small = pygame.transform.scale(alien_img, (ALIEN_WIDTH, ALIEN_HEIGHT))
+alien_img = pygame.transform.scale(alien_img, (ALIEN_WIDTH, ALIEN_HEIGHT))
 
 # ----- Inicia estruturas de dados
+class Alien(pygame.sprite.Sprite):
+    def __init__(self, img):
+        # Construtor da classe mãe (Sprite).
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
+        self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
+        self.speedx = random.randint(-3, 3)
+        self.speedy = random.randint(2, 9)
+
+    def update(self):
+        # Atualizando a posição do alien
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        # Se o meteoro passar do final da tela, volta para cima e sorteia
+        # novas posições e velocidades
+        if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
+            self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
+            self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
+            self.speedx = random.randint(-3, 3)
+            self.speedy = random.randint(2, 9)
+
 game = True
-alien_x = random.randint(0, WIDTH-ALIEN_WIDTH)
-# y negativo significa que está acima do topo da janela. O alien começa fora da janela
-alien_y = -random.randint(-100, -ALIEN_HEIGHT)
-alien_speedx = random.randint(-3, 3)
-alien_speedy = random.randint(2, 9)
-# Variável para o ajuste de velocidade
+
 clock = pygame.time.Clock()
 FPS = 30
+
+# Criando um grupo de meteoros
+all_aliens = pygame.sprite.Group()
+# Criando os aliens
+for i in range(4):
+    meteor = Alien(alien_img)
+    all_aliens.add(meteor)
 
 # ===== Loop principal =====
 while game:
@@ -39,18 +65,16 @@ while game:
             game = False
 
     # ----- Atualiza estado do jogo
-    # Atualizando a posição do alienígena
-    alien_x += alien_speedx
-    alien_y += alien_speedy
-    # Se o alienígena passar do final da tela, volta para cima
-    if alien_y > HEIGHT or alien_x + ALIEN_WIDTH < 0 or alien_x > WIDTH:
-        alien_x = random.randint(0, WIDTH-ALIEN_WIDTH)
-        alien_y = -random.randint(-100, -ALIEN_HEIGHT)
+    # Atualizando a posição do alien
+    all_aliens.update()
 
     # ----- Gera saídas
     window.fill((0, 0, 0))  # Preenche com a cor preta
     window.blit(background, (0, 0))
-    window.blit(alien_img_small, (alien_x, alien_y))
+
+    # Desenhando meteoros
+    all_aliens.draw(window)
+
     pygame.display.update()  # Mostra o novo frame para o jogador
 
 # ===== Finalização =====
