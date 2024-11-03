@@ -15,6 +15,7 @@ ALIEN_WIDTH = 100
 ALIEN_HEIGHT = 76
 SHIP_WIDTH = 110  
 SHIP_HEIGHT = 90  
+
 font = pygame.font.SysFont(None, 48)
 
 #Adiciona fundo.
@@ -58,7 +59,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
         self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
-        self.speedx = random.randint(-3, 3)
+        self.speedx = random.randint(-3, 4)
         self.speedy = random.randint(2, 9)
 
     def update(self):
@@ -70,11 +71,12 @@ class Alien(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
             self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
             self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
-            self.speedx = random.randint(-3, 3)
+            self.speedx = random.randint(-3, 4)
             self.speedy = random.randint(2, 9)
 
 game = True
 
+# Variável para o ajuste de velocidade
 clock = pygame.time.Clock()
 FPS = 30
 
@@ -86,7 +88,7 @@ player = Ship(ship_img)
 all_sprites.add(player)
 
 # Criando os aliens
-for i in range(4):
+for i in range(8):
     alien = Alien(alien_img)
     all_sprites.add(alien)
 
@@ -99,9 +101,23 @@ while game:
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
+        # Verifica se apertou alguma tecla.
+        if event.type == pygame.KEYDOWN:
+            # Dependendo da tecla, altera a velocidade.
+            if event.key == pygame.K_LEFT:
+                player.speedx -= 8
+            if event.key == pygame.K_RIGHT:
+                player.speedx += 8
+        # Verifica se soltou alguma tecla.
+        if event.type == pygame.KEYUP:
+            # Dependendo da tecla, altera a velocidade.
+            if event.key == pygame.K_LEFT:
+                player.speedx += 8
+            if event.key == pygame.K_RIGHT:
+                player.speedx -= 8
 
     # ----- Atualiza estado do jogo
-    # Atualizando a posição do alien
+    # Atualizando a posição dos aliens
     all_sprites.update()
 
     # ----- Gera saídas
