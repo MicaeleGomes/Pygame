@@ -3,6 +3,7 @@ import pygame
 import random
 
 pygame.init()
+pygame.mixer.init()
 
 # ----- Gera tela principal
 WIDTH = 850
@@ -29,11 +30,17 @@ ship_img = pygame.transform.scale(ship_img, (SHIP_WIDTH, SHIP_HEIGHT))
 #Adiciona imagem do tiro
 bullet_img = pygame.image.load('imagens/laser.png').convert_alpha()
 
+# Carrega os sons do jogo
+pygame.mixer.music.load('snd/somprincipal.ogg')
+pygame.mixer.music.set_volume(0.4)
+boom_sound = pygame.mixer.Sound('snd/expl3.wav')
+destroy_sound = pygame.mixer.Sound('snd/expl6.wav')
+pew_sound = pygame.mixer.Sound('snd/pew.wav')
 
 # ----- Inicia estruturas de dados
 # Definindo os novos tipos de classes.
 class Ship(pygame.sprite.Sprite):
-    def __init__(self, img, all_sprites, all_bullets, bullet_img):
+    def __init__(self, img, all_sprites, all_bullets, bullet_img, pew_sound):
         # Construtor da classe mãe (Sprite).
         pygame.sprite.Sprite.__init__(self)
 
@@ -45,6 +52,7 @@ class Ship(pygame.sprite.Sprite):
         self.all_sprites = all_sprites
         self.all_bullets = all_bullets
         self.bullet_img = bullet_img
+        self.pew_sound = pew_sound
 
     def update(self):
         # Atualização da posição da nave
@@ -61,6 +69,7 @@ class Ship(pygame.sprite.Sprite):
         new_bullet = Bullet(self.bullet_img, self.rect.top, self.rect.centerx)
         self.all_sprites.add(new_bullet)
         self.all_bullets.add(new_bullet)
+        self.pew_sound.play()
 
 class Alien(pygame.sprite.Sprite):
     def __init__(self, img):
@@ -118,17 +127,22 @@ FPS = 30
 # Criando um grupo de aliens
 all_sprites = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
+all_aliens = pygame.sprite.Group()
 
 # Criando o jogador
-player = Ship(ship_img, all_sprites, all_bullets, bullet_img)
+player = Ship(ship_img, all_sprites, all_bullets, bullet_img, pew_sound)
 all_sprites.add(player)
+
 
 # Criando os aliens
 for i in range(5):
     alien = Alien(alien_img)
     all_sprites.add(alien)
+    all_aliens.add(alien)
+
 
 # ===== Loop principal =====
+pygame.mixer.music.play(loops=-1)
 while game:
     clock.tick(FPS)
 
@@ -157,6 +171,14 @@ while game:
     # ----- Atualiza estado do jogo
     # Atualizando a posição dos aliens
     all_sprites.update()
+
+     # Verifica se houve colisão entre tiro e o alien 
+    hits = pygame.sprite.groupcollide(all_bullets, all_aliens, True, True)
+    for alien in hits: # As chaves são os elementos do primeiro grupo (aliens) que colidiram com alguma bala
+        # O alien e destruido e precisa ser recriado
+        a = Alien(alien_img)
+        all_sprites.add(a)
+        all_aliens.add(a)
 
     # ----- Gera saídas
     window.fill((0, 0, 0))  # Preenche com a cor preta
