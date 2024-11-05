@@ -17,7 +17,17 @@ ALIEN_HEIGHT = 76
 SHIP_WIDTH = 110  
 SHIP_HEIGHT = 90 
 
+#--------Definição de largura e altura do meteoro
+largura_meteoro = 50
+altura_meteoro = 38
+
 font = pygame.font.SysFont(None, 48)
+
+#--------Imagem do meteoro + escala do meteoro
+meteoro = pygame.image.load('imagens/astroid.png').convert_alpha()
+meteoro = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
+meteoro_pequeno = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
+
 
 #Adiciona fundo.
 background = pygame.image.load('imagens/SpaceBackGround.jpg').convert()
@@ -36,9 +46,34 @@ pygame.mixer.music.set_volume(0.4)
 boom_sound = pygame.mixer.Sound('snd/expl3.wav')
 destroy_sound = pygame.mixer.Sound('snd/expl6.wav')
 pew_sound = pygame.mixer.Sound('snd/pew.wav')
+colisao = pygame.mixer.Sound('snd/crash.ogg')
+
+
+class Meteor(pygame.sprite.Sprite):
+    def __init__(self, img): 
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randint(0, WIDTH-largura_meteoro)
+        self.rect.y = random.randint(-100, -altura_meteoro)
+        self.speedx = random.randint(-4, -2)
+        self.speedy = random.randint(-2, 3)
+
+    def update(self): #--------Atualiza a posição do meteoro.
+
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+       
+       #--------Redefine a posição se o meteoro sair da tela
+        if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
+            self.rect.x = random.randint(0, WIDTH-largura_meteoro)
+            self.rect.y = random.randint(-100, -altura_meteoro)
+            self.speedx = random.randint(-3, 4)
+            self.speedy = random.randint(6, 9)
 
 # ----- Inicia estruturas de dados
-# Definindo os novos tipos de classes.
+#Definindo os novos tipos de classes.
 class Ship(pygame.sprite.Sprite):
     def __init__(self, img, all_sprites, all_bullets, bullet_img, pew_sound):
         # Construtor da classe mãe (Sprite).
@@ -120,6 +155,13 @@ class Bullet(pygame.sprite.Sprite):
 
 game = True
 
+meteoros = pygame.sprite.Group() #--------Cria um grupo de meteoros e adiciona múltiplos meteoros ao grupo
+
+#--------Define a quantidade de meteoros.
+for _ in range(3):  
+    meteor = Meteor(meteoro)
+    meteoros.add(meteor)
+
 # Variável para o ajuste de velocidade
 clock = pygame.time.Clock()
 FPS = 30
@@ -167,10 +209,19 @@ while game:
                 player.speedx += 9
             if event.key == pygame.K_RIGHT:
                 player.speedx -= 9
+    colisao_meteoros = pygame.sprite.spritecollide(player, meteoros, True)
+    if colisao_meteoros:
+        colisao.play()  # Toca o som de colisão
+        pass  # Aqui você pode adicionar outras ações em caso de colisão, se necessário
+
+    # Limpar a tela
+    window.fill((0, 0, 0))
 
     # ----- Atualiza estado do jogo
     # Atualizando a posição dos aliens
     all_sprites.update()
+    meteoros.update() #--------Atualiza a posição de todos os meteoros
+
 
      # Verifica se houve colisão entre tiro e o alien 
     hits = pygame.sprite.groupcollide(all_bullets, all_aliens, True, True)
@@ -181,11 +232,12 @@ while game:
         all_aliens.add(a)
 
     # ----- Gera saídas
-    window.fill((0, 0, 0))  # Preenche com a cor preta
     window.blit(background, (0, 0))
 
     # Desenhando aliens
     all_sprites.draw(window)
+    meteoros.draw(window) #--------Desenha todos os meteoros no grupo
+
 
     pygame.display.update()  # Mostra o novo frame para o jogador
 
