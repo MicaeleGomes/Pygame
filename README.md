@@ -40,9 +40,13 @@ Resposta 2
 
 #### Há limite um limite de quantos asteroides podem bater na nave?
 
-#### Há limite um limite de quantos asteroides podem bater na nave?
+Resposta 3
+
+#### Há de quantos aliens podem ser perdidos?
+
+Resposta 4
 
 
 
-![Logo](Logo_Insper.png)
+![Logo](imagens/Logo_Insper.png)
 
