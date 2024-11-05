@@ -48,5 +48,5 @@ Resposta 4
 
 
 
-![Logo](imagens/Logo_Insper.png)
+![Logo](imagens/images.png)
 
