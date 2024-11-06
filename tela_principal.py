@@ -284,8 +284,7 @@ while game:
     colisao_meteoros = pygame.sprite.spritecollide(player, meteoros, True)
     if colisao_meteoros:
         colisao.play()  # Toca o som de colisão
-        pass  # Aqui você pode adicionar outras ações em caso de colisão, se necessário
-
+        game = False
 
     # ----- Atualiza estado do jogo
     # Atualizando a posição dos aliens
