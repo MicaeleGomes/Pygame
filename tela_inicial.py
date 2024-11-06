@@ -50,7 +50,7 @@ area_botao = pygame.Rect(pos_x, pos_y, texto_renderizado.get_width(), texto_rend
 def acao_botao():
     print("Botão clicado! Ação sendo executada...")
 
-pygame.mixer.music.load('snd/space.mp3')  
+pygame.mixer.music.load('snd/1_lift_off.flac')  
 pygame.mixer.music.set_volume(0.4)        
 pygame.mixer.music.play(-1, 0.0)          
 
