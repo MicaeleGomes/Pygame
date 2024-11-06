@@ -48,6 +48,16 @@ meteoro = pygame.image.load('imagens/astroid.png').convert_alpha()
 meteoro = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
 meteoro_pequeno = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
 
+#--------Carrega a fonte do jogo------------
+font_path = 'Fontes/PressStart2P-Regular.ttf'  # Caminho do arquivo da fonte
+font = pygame.font.Font(font_path, 50)  # Tamanho da fonte (50 aqui)
+cor_fonte = (255, 255, 255)
+oops = "Oops..."
+oops_renderizado = font.render(oops, True, cor_fonte)
+
+pos_x = (WIDTH - oops_renderizado.get_width()) // 2  
+pos_y = (HEIGHT // 2) - 100  
+
 #---------------Adiciona imagems de explosão ao tiro colidir com o Alien
 explosion_anim = []
 for i in range(9):
@@ -65,6 +75,7 @@ alien_icon = pygame.transform.scale(assets['alien_img'], (30, 30))
 #------------------ Carrega os sons do jogo
 pygame.mixer.music.load('snd/somprincipal.ogg')
 pygame.mixer.music.set_volume(0.4)
+boom_sound = pygame.mixer.Sound('snd/expl3.wav')
 destroy_sound = pygame.mixer.Sound('snd/expl6.wav')
 colisao = pygame.mixer.Sound('snd/crash.ogg')
 assets['pew_sound'] = pygame.mixer.Sound('snd/pew.wav')
@@ -156,6 +167,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         # Se o alien passar do final da tela, volta para cima e sorteia
+        # novas posições e velocidades
         if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
             self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
             self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
