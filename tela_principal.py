@@ -357,6 +357,10 @@ while state != DONE:
             keys_down = {}
             explosion_tick = pygame.time.get_ticks()
             explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+        
+        #se o meteoro bater na nave, o jogador perde 200 pontos.
+        if colisao_meteoros:
+            score -= 200
 
         # Recria um novo meteoro para cada meteoro que colidiu
         while len(meteoros) < 3:  
