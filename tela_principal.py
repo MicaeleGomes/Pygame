@@ -48,6 +48,9 @@ meteoro = pygame.image.load('imagens/astroid.png').convert_alpha()
 meteoro = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
 meteoro_pequeno = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
 
+# Carrega e redimensiona a imagem do alien para o placar
+alien_icon = pygame.transform.scale(assets['alien_img'], (30, 30))
+
 #--------Carrega a fonte do jogo------------
 font_path = 'Fontes/PressStart2P-Regular.ttf'  # Caminho do arquivo da fonte
 font = pygame.font.Font(font_path, 50)  # Tamanho da fonte (50 aqui)
@@ -68,9 +71,6 @@ for i in range(9):
     explosion_anim.append(img)
 assets["explosion_anim"] = explosion_anim
 assets["score_font"] = pygame.font.Font('Fontes/PressStart2P.ttf', 28)
-
-# Carrega e redimensiona a imagem do alien para o placar
-alien_icon = pygame.transform.scale(assets['alien_img'], (30, 30))
 
 #------------------ Carrega os sons do jogo
 pygame.mixer.music.load('snd/somprincipal.ogg')
@@ -102,8 +102,8 @@ class Meteor(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
             self.rect.x = random.randint(0, WIDTH-largura_meteoro)
             self.rect.y = random.randint(-100, -altura_meteoro)
-            self.speedx = random.randint(-3, 4)
-            self.speedy = random.randint(6, 9)
+            self.speedx = random.randint(-2, 2)
+            self.speedy = random.randint(4, 7)
 
 # ----- Inicia estruturas de dados
 #Definindo os novos tipos de classes.
@@ -272,7 +272,7 @@ for i in range(3):
     all_aliens.add(alien)
 
 #--------Define a quantidade de meteoros.
-for _ in range(3):  
+for _ in range(2):  
     meteor = Meteor(meteoro)
     meteoros.add(meteor)
 
@@ -285,6 +285,15 @@ state = PLAYING
 #----------Define score/placar
 score = 0
 keys_down = {}
+
+# -------- Definindo temporizador
+GAME_DURATION = 60000  # Duração do jogo em milissegundos (60 segundos)
+start_time = pygame.time.get_ticks()  # Marca o tempo inicial do jogo
+
+# Carrega a imagem do cronômetro para o temporizador
+timer_icon = pygame.image.load('imagens/timer_pygame.png').convert_alpha()  
+timer_icon = pygame.transform.scale(timer_icon, (30, 30)) 
+
 
 # ===== Loop principal =====
 pygame.mixer.music.play(loops=-1)
@@ -320,9 +329,10 @@ while state != DONE:
                         player.speedx -= 9
 
     # ----- Atualiza estado do jogo
+
     # Atualizando a posição dos aliens
     all_sprites.update()
-    #------ Atualiza a posição de todos os meteoros
+    # Atualiza a posição de todos os meteoros
     meteoros.update() 
 
 
@@ -363,7 +373,7 @@ while state != DONE:
             score -= 200
 
         # Recria um novo meteoro para cada meteoro que colidiu
-        while len(meteoros) < 3:  
+        while len(meteoros) < 2:  
             novo_meteoro = Meteor(meteoro)
             meteoros.add(novo_meteoro)
             all_sprites.add(novo_meteoro)
@@ -375,28 +385,52 @@ while state != DONE:
             player = Ship(groups, assets)
             all_sprites.add(player)
 
+    # Calcula o tempo restante em segundos
+    elapsed_time = pygame.time.get_ticks() - start_time
+    remaining_time = max(0, (GAME_DURATION - elapsed_time) // 1000)  # Converte para segundos
+
+    # Finaliza o jogo quando o tempo acaba
+    if remaining_time <= 0:
+        state = DONE
+
     # ----- Gera saídas
     window.fill((0, 0, 0))
     window.blit(assets['background'], (0, 0))
 
-    #------------- Desenhando aliens
+    #------------- Desenhando aliens e meteoros
     all_sprites.draw(window)
-    #------------- Desenha todos os meteoros no grupo
     meteoros.draw(window) 
 
     # ------------ Desenha o placar com a imagem do alien ao lado do score
     # Defina a posição da caixinha e desenhe o placar
     pygame.draw.rect(window, SCORE_BG_COLOR, (*SCORE_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
 
-    # Ajuste fino para centralizar o alien na caixinha
+    # Centralizando o ícone alien 
     alien_icon_position = (SCORE_POSITION[0] + 10, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - alien_icon.get_height()) // 2)
     window.blit(alien_icon, alien_icon_position)
 
-    # Centraliza o texto do score ao lado da imagem do alien, na mesma posição vertical
+    # Centraliza o texto do score ao lado da imagem do alien
     text_surface = score_font.render("{:08d}".format(score), True, SCORE_COLOR)
     text_rect = text_surface.get_rect()
     text_rect.topleft = (alien_icon_position[0] + 40, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - text_rect.height) // 2)
     window.blit(text_surface, text_rect)
+
+    # Desenha a caixinha do temporizador
+    TIMER_BOX_POSITION = (20, 70)  # Posição do temporizador (abaixo do placar)
+    # TIMER_BOX_POSITION = (WIDTH - SCORE_BOX_WIDTH - 20, 20) # Lado superior direito
+
+    pygame.draw.rect(window, SCORE_BG_COLOR, (*TIMER_BOX_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
+
+    # Centralizando o ícone do cronômetro
+    timer_icon_position = (TIMER_BOX_POSITION[0] + 10, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - timer_icon.get_height()) // 2)
+    window.blit(timer_icon, timer_icon_position)
+
+    # Centraliza o texto do tempo restante ao lado do ícone do cronômetro
+    time_surface = score_font.render("{:02d}".format(remaining_time), True, SCORE_COLOR)
+    time_rect = time_surface.get_rect()
+    time_rect.topleft = (timer_icon_position[0] + 40, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - time_rect.height) // 2)
+    window.blit(time_surface, time_rect)
+
 
     pygame.display.update()  # Mostra o novo frame para o jogador
 
