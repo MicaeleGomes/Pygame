@@ -23,7 +23,6 @@ Coloque qualquer informação adicional aqui
 
 ## Referência
 
- - [Tutorial | Pygame](https://insper.github.io/DesignDeSoftware/pygame/handout/)
  - [PressStart2P | Google Fonts](https://github.com/matiassingers/awesome-readme)
  - [Docs | Pygame](https://www.pygame.org/docs/)
 
