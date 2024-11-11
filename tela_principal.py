@@ -166,6 +166,11 @@ class Alien(pygame.sprite.Sprite):
         # Atualizando a posição do alien
         self.rect.x += self.speedx
         self.rect.y += self.speedy
+
+        if self.rect.top > HEIGHT:
+            global score  # Modificando a variável global score
+            score -= 50
+            
         # Se o alien passar do final da tela, volta para cima e sorteia
         # novas posições e velocidades
         if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
@@ -386,12 +391,14 @@ while state != DONE:
             all_sprites.add(player)
 
     # Calcula o tempo restante em segundos
-    elapsed_time = pygame.time.get_ticks() - start_time
+    elapsed_time = pygame.time.get_ticks( ) - start_time
     remaining_time = max(0, (GAME_DURATION - elapsed_time) // 1000)  # Converte para segundos
 
     # Finaliza o jogo quando o tempo acaba
     if remaining_time <= 0:
         state = DONE
+        with open("score.txt", "w") as file:
+            file.write(str(score))
 
     # ----- Gera saídas
     window.fill((0, 0, 0))
@@ -433,6 +440,11 @@ while state != DONE:
 
 
     pygame.display.update()  # Mostra o novo frame para o jogador
+
+import tela_final
+tela_final.exibir_tela_final(score)
+pygame.quit()
+
 
 # ===== Finalização =====
 pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
