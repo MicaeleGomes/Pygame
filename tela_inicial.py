@@ -45,7 +45,7 @@ pos_y2 = pos_y + texto_renderizado.get_height() + 10
 bt_x = 300
 bt_y = 600
 
-area_botao = pygame.Rect(pos_x, pos_y, texto_renderizado.get_width(), texto_renderizado.get_height())
+area_botao = pygame.Rect(bt_x, bt_y, texto_renderizado.get_width(), texto_renderizado.get_height())
 
 def acao_botao():
     print("Botão clicado! Ação sendo executada...")
