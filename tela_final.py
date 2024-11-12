@@ -43,7 +43,7 @@ def exibir_tela_final(score):
     tela_de_fundo = pygame.image.load("imagens/SpaceBackGround.jpg")
     try:
         with open('score.txt', 'r') as file:
-            score = int(file.read())  # Lê o score como inteiro
+            score = int(file.read())  
     except FileNotFoundError:
         score = 0
 
@@ -69,8 +69,7 @@ def exibir_tela_final(score):
             if event.type == pygame.QUIT:
                 game = False
                 sys.exit()
-
-
+                
         janela.fill((9, 3, 54))  #--------preenche o fundo da janela
         
         janela.blit(tela_de_fundo, (0, 0))

@@ -1,7 +1,6 @@
 # ----- Importa e inicia pacotes
 import pygame
 import random
-
 pygame.init()
 pygame.mixer.init()
 
@@ -97,8 +96,8 @@ class Meteor(pygame.sprite.Sprite):
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
-       
-       #--------Redefine a posição se o meteoro sair da tela
+    
+    #--------Redefine a posição se o meteoro sair da tela
         if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
             self.rect.x = random.randint(0, WIDTH-largura_meteoro)
             self.rect.y = random.randint(-100, -altura_meteoro)
@@ -140,7 +139,7 @@ class Ship(pygame.sprite.Sprite):
         # Verifica quantos ticks se passaram desde o último tiro.
         elapsed_ticks = now - self.last_shot
 
-         # Se já pode atirar novamente...
+        # Se já pode atirar novamente...
         if elapsed_ticks > self.shoot_ticks:
             # Marca o tick da nova imagem.
             self.last_shot = now
@@ -448,4 +447,3 @@ pygame.quit()
 
 # ===== Finalização =====
 pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
-

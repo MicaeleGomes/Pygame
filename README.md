@@ -25,6 +25,7 @@ Coloque qualquer informação adicional aqui
 
  - [PressStart2P | Google Fonts](https://github.com/matiassingers/awesome-readme)
  - [Docs | Pygame](https://www.pygame.org/docs/)
+ - [Guilhermeasper](https://youtu.be/rA8ACMGV2LY?si=OhVxEdyK-9PkGsbA)
 
 
 ## FAQ
