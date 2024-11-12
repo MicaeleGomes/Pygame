@@ -62,6 +62,9 @@ meteoro_pequeno = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteo
 #--------Imagem de fundo do jogo
 tela_de_fundo = pygame.image.load("imagens/SpaceBackGround.jpg")
 
+clock = pygame.time.Clock()
+FPS = 60
+
 #--------Classe Meteor para criação dos meteoros
 class Meteor(pygame.sprite.Sprite):
     def __init__(self, img): 
@@ -96,7 +99,7 @@ for _ in range(3):
     meteoros.add(meteor)
 
 while game:
-
+    clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game = False
