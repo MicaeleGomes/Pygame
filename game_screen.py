@@ -49,7 +49,7 @@ def game_screen(window):
     keys_down = {}    
 
     # -------- Definindo temporizador
-    GAME_DURATION = 10000  # Duração do jogo em milissegundos (60 segundos)
+    GAME_DURATION = 60000  # Duração do jogo em milissegundos (60 segundos)
     start_time = pygame.time.get_ticks()  
 
     # ===== Loop principal =====
