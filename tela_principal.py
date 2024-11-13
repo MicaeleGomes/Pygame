@@ -18,10 +18,8 @@ SCORE_POSITION = (20, 20)  # Posição da caixinha
 SCORE_COLOR = (255, 255, 255)  # Cor do texto
 SCORE_BG_COLOR = (100, 100, 200)  # Cor de fundo da caixinha
 
-#---------------- Fonte para o score
-score_font = pygame.font.Font('Fontes/PressStart2P.ttf', 24)
-
 # ----- Inicia assets
+FPS = 30
 ALIEN_WIDTH = 100
 ALIEN_HEIGHT = 76
 SHIP_WIDTH = 110  
@@ -30,25 +28,55 @@ largura_meteoro = 50
 altura_meteoro = 38
 font = pygame.font.SysFont(None, 48)
 
-assets = {}
-#-------------Adiciona imagem de fundo.
-assets['background'] = pygame.image.load('imagens/SpaceBackGround.jpg').convert()
-#-------------Adiciona imagem do Alien (invasor)
-assets['alien_img'] = pygame.image.load('imagens/alien.png').convert_alpha()
-assets['alien_img'] = pygame.transform.scale(assets['alien_img'], (ALIEN_WIDTH, ALIEN_HEIGHT))
-#--------------Adiciona imagem da nave (jogador)
-assets['ship_img'] = pygame.image.load('imagens/ship.png').convert_alpha()
-assets['ship_img'] = pygame.transform.scale(assets['ship_img'], (SHIP_WIDTH, SHIP_HEIGHT))
-#--------------Adiciona imagem do tiro
-assets['bullet_img'] = pygame.image.load('imagens/laser.png').convert_alpha()
+def load_assets():
+    assets = {}
+    #-------------Adiciona imagem de fundo.
+    assets['background'] = pygame.image.load('imagens/SpaceBackGround.jpg').convert()
+    #-------------Adiciona imagem do Alien (invasor)
+    assets['alien_img'] = pygame.image.load('imagens/alien.png').convert_alpha()
+    assets['alien_img'] = pygame.transform.scale(assets['alien_img'], (ALIEN_WIDTH, ALIEN_HEIGHT))
+    #--------------Adiciona imagem da nave (jogador)
+    assets['ship_img'] = pygame.image.load('imagens/ship.png').convert_alpha()
+    assets['ship_img'] = pygame.transform.scale(assets['ship_img'], (SHIP_WIDTH, SHIP_HEIGHT))
+    #--------------Adiciona imagem do tiro
+    assets['bullet_img'] = pygame.image.load('imagens/laser.png').convert_alpha()
+    #--------Imagem do meteoro + escala do meteoro
+    assets['meteor_img'] = pygame.image.load('imagens/astroid.png').convert_alpha()
+    assets['meteor_img'] = pygame.transform.scale(assets['meteor_img'], (largura_meteoro, altura_meteoro))
 
-#--------Imagem do meteoro + escala do meteoro
-meteoro = pygame.image.load('imagens/astroid.png').convert_alpha()
-meteoro = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
-meteoro_pequeno = pygame.transform.scale(meteoro, (largura_meteoro, altura_meteoro))
+    # Carrega a imagem do cronômetro para o temporizador
+    assets['timer_icon'] = pygame.image.load('imagens/timer_pygame.png').convert_alpha()
+    assets['timer_icon'] = pygame.transform.scale(assets['timer_icon'], (30, 30))
 
-# Carrega e redimensiona a imagem do alien para o placar
-alien_icon = pygame.transform.scale(assets['alien_img'], (30, 30))
+    # Carrega e redimensiona a imagem do alien para o placar
+    assets['alien_icon'] = pygame.transform.scale(assets['alien_img'], (30, 30))
+
+    #---------------Adiciona imagems de explosão ao tiro colidir com o Alien
+    explosion_anim = []
+    for i in range(9):
+        # Os arquivos de animação são numerados de 00 a 08
+        filename = f'imagens/regularExplosion{str(i).zfill(2)}.png'
+        img = pygame.image.load(filename).convert()
+        img = pygame.transform.scale(img, (80, 80))
+        explosion_anim.append(img)
+    assets["explosion_anim"] = explosion_anim
+    assets["score_font"] = pygame.font.Font('Fontes/PressStart2P.ttf', 28)
+
+    #------------------ Carrega os sons do jogo
+    pygame.mixer.music.load('snd/somprincipal.ogg')
+    pygame.mixer.music.set_volume(0.4)
+    # boom_sound = pygame.mixer.Sound('snd/expl3.wav')
+    assets['boom_sound'] = pygame.mixer.Sound('snd/expl3.wav')
+    assets['destroy_sound'] = pygame.mixer.Sound('snd/expl6.wav')
+    # colisao = pygame.mixer.Sound('snd/crash.ogg')
+    assets['colisao_sound'] = pygame.mixer.Sound('snd/crash.ogg')
+    assets['pew_sound'] = pygame.mixer.Sound('snd/pew.wav')
+    assets['boom_sound'] = pygame.mixer.Sound('snd/expl3.wav')
+
+    return assets
+
+#---------------- Fonte para o score
+score_font = pygame.font.Font('Fontes/PressStart2P.ttf', 24)
 
 #--------Carrega a fonte do jogo------------
 font_path = 'Fontes/PressStart2P-Regular.ttf'  # Caminho do arquivo da fonte
@@ -60,32 +88,13 @@ oops_renderizado = font.render(oops, True, cor_fonte)
 pos_x = (WIDTH - oops_renderizado.get_width()) // 2  
 pos_y = (HEIGHT // 2) - 100  
 
-#---------------Adiciona imagems de explosão ao tiro colidir com o Alien
-explosion_anim = []
-for i in range(9):
-    # Os arquivos de animação são numerados de 00 a 08
-    filename = f'imagens/regularExplosion{str(i).zfill(2)}.png'
-    img = pygame.image.load(filename).convert()
-    img = pygame.transform.scale(img, (80, 80))
-    explosion_anim.append(img)
-assets["explosion_anim"] = explosion_anim
-assets["score_font"] = pygame.font.Font('Fontes/PressStart2P.ttf', 28)
-
-#------------------ Carrega os sons do jogo
-pygame.mixer.music.load('snd/somprincipal.ogg')
-pygame.mixer.music.set_volume(0.4)
-boom_sound = pygame.mixer.Sound('snd/expl3.wav')
-assets['destroy_sound'] = pygame.mixer.Sound('snd/expl6.wav')
-colisao = pygame.mixer.Sound('snd/crash.ogg')
-assets['pew_sound'] = pygame.mixer.Sound('snd/pew.wav')
-assets['boom_sound'] = pygame.mixer.Sound('snd/expl3.wav')
-
 
 class Meteor(pygame.sprite.Sprite):
-    def __init__(self, img): 
+    def __init__(self, assets):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = img
+        self.image = assets['meteor_img']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH-largura_meteoro)
         self.rect.y = random.randint(-100, -altura_meteoro)
@@ -93,7 +102,6 @@ class Meteor(pygame.sprite.Sprite):
         self.speedy = random.randint(1, 4)
 
     def update(self): #--------Atualiza a posição do meteoro.
-
         self.rect.x += self.speedx
         self.rect.y += self.speedy
     
@@ -112,6 +120,7 @@ class Ship(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = assets['ship_img']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
@@ -155,6 +164,7 @@ class Alien(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = assets['alien_img']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
         self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
@@ -162,13 +172,13 @@ class Alien(pygame.sprite.Sprite):
         self.speedy = random.randint(2, 9)
 
     def update(self):
+        global score  # Declara `score` como global 
         # Atualizando a posição do alien
         self.rect.x += self.speedx
         self.rect.y += self.speedy
 
         if self.rect.top > HEIGHT:
-            global score  # Modificando a variável global score
-            score -= 50
+            score -= 100
             
         # Se o alien passar do final da tela, volta para cima e sorteia
         # novas posições e velocidades
@@ -186,6 +196,7 @@ class Bullet(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = assets['bullet_img']
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
 
         # Coloca no lugar inicial definido em x, y do constutor
@@ -213,9 +224,9 @@ class Explosion(pygame.sprite.Sprite):
 
         # Inicia o processo de animação colocando a primeira imagem na tela.
         self.frame = 0  # Armazena o índice atual na animação
-        self.image = self.explosion_anim[self.frame]  # Pega a primeira imagem
+        self.image = self.explosion_anim[self.frame]  
         self.rect = self.image.get_rect()
-        self.rect.center = center  # Posiciona o centro da imagem
+        self.rect.center = center 
 
         # Guarda o tick da primeira imagem, ou seja, o momento em que a imagem foi mostrada
         self.last_update = pygame.time.get_ticks()
@@ -250,203 +261,199 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect()
                 self.rect.center = center
 
-# Variável para o ajuste de velocidade
-clock = pygame.time.Clock()
-FPS = 30
+def game_screen(window):
+    global score  
+    score = 0     
 
-# Criando um grupo de aliens e tiros
-all_sprites = pygame.sprite.Group()
-all_aliens = pygame.sprite.Group()
-all_bullets = pygame.sprite.Group()
-groups = {}
-groups['all_sprites'] = all_sprites
-groups['all_aliens'] = all_aliens
-groups['all_bullets'] = all_bullets
+    # Variável para o ajuste de velocidade
+    clock = pygame.time.Clock()
 
-meteoros = pygame.sprite.Group() #--------Cria um grupo de meteoros e adiciona múltiplos meteoros ao grupo
+    assets = load_assets()
 
-# Criando o jogador
-player = Ship(groups, assets)
-all_sprites.add(player)
+    # Criando um grupo de aliens e tiros
+    all_sprites = pygame.sprite.Group()
+    all_aliens = pygame.sprite.Group()
+    all_bullets = pygame.sprite.Group()
+    all_meteors = pygame.sprite.Group()
 
-# Criando os aliens
-for i in range(3):
-    alien = Alien(assets)
-    all_sprites.add(alien)
-    all_aliens.add(alien)
+    groups = {}
+    groups['all_sprites'] = all_sprites
+    groups['all_aliens'] = all_aliens
+    groups['all_bullets'] = all_bullets
+    groups['all_meteors'] = all_meteors
 
-#--------Define a quantidade de meteoros.
-for _ in range(2):  
-    meteor = Meteor(meteoro)
-    meteoros.add(meteor)
+    # Criando o jogador
+    player = Ship(groups, assets)
+    all_sprites.add(player)
 
-#---------Define estados da nave
-DONE = 0
-PLAYING = 1
-EXPLODING = 2
-state = PLAYING
+    # Criando os aliens
+    for i in range(3):
+        alien = Alien(assets)
+        all_sprites.add(alien)
+        all_aliens.add(alien)
 
-#----------Define score/placar
-score = 0
-keys_down = {}
+    #--------Define a quantidade de meteoros.
+    for _ in range(2):  
+        # meteor = Meteor(meteoro)
+        meteor = Meteor(assets)
+        all_sprites.add(meteor)
+        all_meteors.add(meteor)
 
-# -------- Definindo temporizador
-GAME_DURATION = 60000  # Duração do jogo em milissegundos (60 segundos)
-start_time = pygame.time.get_ticks()  # Marca o tempo inicial do jogo
+    #---------Define estados da nave
+    DONE = 0
+    PLAYING = 1
+    EXPLODING = 2
+    state = PLAYING
 
-# Carrega a imagem do cronômetro para o temporizador
-timer_icon = pygame.image.load('imagens/timer_pygame.png').convert_alpha()  
-timer_icon = pygame.transform.scale(timer_icon, (30, 30)) 
+    keys_down = {}    
 
+    # -------- Definindo temporizador
+    GAME_DURATION = 60000  # Duração do jogo em milissegundos (60 segundos)
+    start_time = pygame.time.get_ticks()  # Marca o tempo inicial do jogo
 
-# ===== Loop principal =====
-pygame.mixer.music.play(loops=-1)
-# while game:
-while state != DONE:
-    clock.tick(FPS)
+    # ===== Loop principal =====
+    pygame.mixer.music.play(loops=-1)
+    # while game:
+    while state != DONE:
+        clock.tick(FPS)
 
-    # ----- Trata eventos
-    for event in pygame.event.get():
-        # ----- Verifica consequências
-        if event.type == pygame.QUIT:
-            # game = False
-            state = DONE
-        # Só verifica o teclado se está no estado de jogo
-        if state == PLAYING:
-            # Verifica se apertou alguma tecla.
-            if event.type == pygame.KEYDOWN:
-                # Dependendo da tecla, altera a velocidade.
-                keys_down[event.key] = True
-                if event.key == pygame.K_LEFT:
-                    player.speedx -= 9
-                if event.key == pygame.K_RIGHT:
-                    player.speedx += 9
-                if event.key == pygame.K_SPACE:
-                    player.shoot()
-            # Verifica se soltou alguma tecla.
-            if event.type == pygame.KEYUP:
-                # Dependendo da tecla, altera a velocidade.
-                if event.key in keys_down and keys_down[event.key]:
+        # ----- Trata eventos
+        for event in pygame.event.get():
+            # ----- Verifica consequências
+            if event.type == pygame.QUIT:
+                # game = False
+                state = DONE
+            # Só verifica o teclado se está no estado de jogo
+            if state == PLAYING:
+                # Verifica se apertou alguma tecla.
+                if event.type == pygame.KEYDOWN:
+                    # Dependendo da tecla, altera a velocidade.
+                    keys_down[event.key] = True
                     if event.key == pygame.K_LEFT:
-                        player.speedx += 9
-                    if event.key == pygame.K_RIGHT:
                         player.speedx -= 9
+                    if event.key == pygame.K_RIGHT:
+                        player.speedx += 9
+                    if event.key == pygame.K_SPACE:
+                        player.shoot()
+                # Verifica se soltou alguma tecla.
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera a velocidade.
+                    if event.key in keys_down and keys_down[event.key]:
+                        if event.key == pygame.K_LEFT:
+                            player.speedx += 9
+                        if event.key == pygame.K_RIGHT:
+                            player.speedx -= 9
 
-    # ----- Atualiza estado do jogo
+        # ----- Atualiza estado do jogo
 
-    # Atualizando a posição dos aliens
-    all_sprites.update()
-    # Atualiza a posição de todos os meteoros
-    meteoros.update() 
+        # Atualizando a posição dos aliens
+        all_sprites.update()
+        # Atualiza a posição de todos os meteoros
+        all_meteors.update()
 
+        if state == PLAYING:
+            # Verifica se houve colisão entre tiro e o alien 
+            hits = pygame.sprite.groupcollide(all_aliens, all_bullets, True, True, pygame.sprite.collide_mask)
+            for alien in hits:
+                # O alien é destruido e precisa ser recriado
+                assets['destroy_sound'].play()
+                a = Alien(assets)
+                all_sprites.add(a)
+                all_aliens.add(a)
 
-    if state == PLAYING:
-        # Verifica se houve colisão entre tiro e o alien 
-        hits = pygame.sprite.groupcollide(all_aliens, all_bullets, True, True)
-        for alien in hits: # As chaves são os elementos do primeiro grupo (aliens) que colidiram com alguma bala
-            # O alien e destruido e precisa ser recriado
-            assets['destroy_sound'].play()
-            a = Alien(assets)
-            all_sprites.add(a)
-            all_aliens.add(a)
+                # No lugar do alien antigo, adicionar uma explosão.
+                explosao_alien = Explosion(alien.rect.center, assets)
+                all_sprites.add(explosao_alien)
 
-            # No lugar do alien antigo, adicionar uma explosão.
-            explosao_alien = Explosion(alien.rect.center, assets)
-            all_sprites.add(explosao_alien)
+                # Ganhou pontos!
+                score += 100
+            
+            # Verifica se houve colisão entre tiros e meteoros
+            bullet_hits_meteors = pygame.sprite.groupcollide(all_bullets, all_meteors, True, False)
+            for bullet in bullet_hits_meteors:
+                bullet.kill()  # Remove o tiro visualmente
 
-            # Ganhou pontos!
-            score += 100
-        
-        # Verifica se houve colisão entre tiros e meteoros
-        bullet_hits_meteors = pygame.sprite.groupcollide(all_bullets, meteoros, True, False)
-        for bullet in bullet_hits_meteors:
-            bullet.kill()  # Remove o tiro visualmente
+            # Verifica se houve colisão entre meteoro e a nave
+            colisao_meteoros = pygame.sprite.spritecollide(player, all_meteors, True, pygame.sprite.collide_mask)
+            if len(colisao_meteoros) > 0:
+                assets['boom_sound'].play()
+                player.kill()
+                explosao = Explosion(player.rect.center, assets)
+                all_sprites.add(explosao)
+                state = EXPLODING
+                keys_down = {}
+                explosion_tick = pygame.time.get_ticks()
+                explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+            
+            #se o meteoro bater na nave, o jogador perde 200 pontos.
+            if colisao_meteoros:
+                score -= 200
 
-        # Verifica se houve colisão entre meteoro e o nave
-        colisao_meteoros = pygame.sprite.spritecollide(player, meteoros, True)
-        if len(colisao_meteoros) > 0:
-            # Toca o som da colisão
-            assets['boom_sound'].play()
-            player.kill()
-            explosao = Explosion(player.rect.center, assets)
-            all_sprites.add(explosao)
-            state = EXPLODING
-            keys_down = {}
-            explosion_tick = pygame.time.get_ticks()
-            explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
-        
-        #se o meteoro bater na nave, o jogador perde 200 pontos.
-        if colisao_meteoros:
-            score -= 200
+            while len(all_meteors) < 2:  
+                novo_meteoro = Meteor(assets)
+                all_meteors.add(novo_meteoro)
+                all_sprites.add(novo_meteoro)
 
-        # Recria um novo meteoro para cada meteoro que colidiu
-        while len(meteoros) < 2:  
-            novo_meteoro = Meteor(meteoro)
-            meteoros.add(novo_meteoro)
-            all_sprites.add(novo_meteoro)
+        elif state == EXPLODING:
+            now = pygame.time.get_ticks()
+            if now - explosion_tick > explosion_duration:
+                state = PLAYING
+                player = Ship(groups, assets)
+                all_sprites.add(player)
 
-    elif state == EXPLODING:
-        now = pygame.time.get_ticks()
-        if now - explosion_tick > explosion_duration:
-            state = PLAYING
-            player = Ship(groups, assets)
-            all_sprites.add(player)
+        # Calcula o tempo restante em segundos
+        elapsed_time = pygame.time.get_ticks( ) - start_time
+        remaining_time = max(0, (GAME_DURATION - elapsed_time) // 1000)  # Converte para segundos
 
-    # Calcula o tempo restante em segundos
-    elapsed_time = pygame.time.get_ticks( ) - start_time
-    remaining_time = max(0, (GAME_DURATION - elapsed_time) // 1000)  # Converte para segundos
+        # Finaliza o jogo quando o tempo acaba
+        if remaining_time <= 0:
+            state = DONE
+            with open("score.txt", "w") as file:
+                file.write(str(score))
 
-    # Finaliza o jogo quando o tempo acaba
-    if remaining_time <= 0:
-        state = DONE
-        with open("score.txt", "w") as file:
-            file.write(str(score))
+        # ----- Gera saídas
+        window.fill((0, 0, 0))
+        window.blit(assets['background'], (0, 0))
 
-    # ----- Gera saídas
-    window.fill((0, 0, 0))
-    window.blit(assets['background'], (0, 0))
+        #------------- Desenhando aliens e meteoros
+        all_sprites.draw(window)
+        all_meteors.draw(window) 
 
-    #------------- Desenhando aliens e meteoros
-    all_sprites.draw(window)
-    meteoros.draw(window) 
+        # ------------ Desenha o placar com a imagem do alien ao lado do score
+        pygame.draw.rect(window, SCORE_BG_COLOR, (*SCORE_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
 
-    # ------------ Desenha o placar com a imagem do alien ao lado do score
-    # Defina a posição da caixinha e desenhe o placar
-    pygame.draw.rect(window, SCORE_BG_COLOR, (*SCORE_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
+        alien_icon = assets['alien_icon']  # Carrega o ícone do alien
+        alien_icon_position = (SCORE_POSITION[0] + 10, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - alien_icon.get_height()) // 2)
+        window.blit(alien_icon, alien_icon_position)
 
-    # Centralizando o ícone alien 
-    alien_icon_position = (SCORE_POSITION[0] + 10, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - alien_icon.get_height()) // 2)
-    window.blit(alien_icon, alien_icon_position)
+        text_surface = assets['score_font'].render("{:07d}".format(score), True, SCORE_COLOR)
+        text_rect = text_surface.get_rect()
+        text_rect.topleft = (alien_icon_position[0] + 40, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - text_rect.height) // 2)
+        window.blit(text_surface, text_rect)
 
-    # Centraliza o texto do score ao lado da imagem do alien
-    text_surface = score_font.render("{:08d}".format(score), True, SCORE_COLOR)
-    text_rect = text_surface.get_rect()
-    text_rect.topleft = (alien_icon_position[0] + 40, SCORE_POSITION[1] + (SCORE_BOX_HEIGHT - text_rect.height) // 2)
-    window.blit(text_surface, text_rect)
+        # Desenha a caixinha do temporizador
+        TIMER_BOX_POSITION = (20, 70)  # Posição do temporizador (abaixo do placar)
 
-    # Desenha a caixinha do temporizador
-    TIMER_BOX_POSITION = (20, 70)  # Posição do temporizador (abaixo do placar)
-    # TIMER_BOX_POSITION = (WIDTH - SCORE_BOX_WIDTH - 20, 20) # Lado superior direito
+        pygame.draw.rect(window, SCORE_BG_COLOR, (*TIMER_BOX_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
 
-    pygame.draw.rect(window, SCORE_BG_COLOR, (*TIMER_BOX_POSITION, SCORE_BOX_WIDTH, SCORE_BOX_HEIGHT), border_radius=10)
+        # Centralizando o ícone do cronômetro
+        timer_icon = assets['timer_icon']  # Carrega o ícone do cronômetro de assets
+        timer_icon_position = (TIMER_BOX_POSITION[0] + 10, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - timer_icon.get_height()) // 2)
+        window.blit(timer_icon, timer_icon_position)
 
-    # Centralizando o ícone do cronômetro
-    timer_icon_position = (TIMER_BOX_POSITION[0] + 10, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - timer_icon.get_height()) // 2)
-    window.blit(timer_icon, timer_icon_position)
+        time_surface = assets['score_font'].render("{:02d}".format(remaining_time), True, SCORE_COLOR)
+        time_rect = time_surface.get_rect()
+        time_rect.topleft = (timer_icon_position[0] + 40, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - time_rect.height) // 2)
+        window.blit(time_surface, time_rect)
 
-    # Centraliza o texto do tempo restante ao lado do ícone do cronômetro
-    time_surface = score_font.render("{:02d}".format(remaining_time), True, SCORE_COLOR)
-    time_rect = time_surface.get_rect()
-    time_rect.topleft = (timer_icon_position[0] + 40, TIMER_BOX_POSITION[1] + (SCORE_BOX_HEIGHT - time_rect.height) // 2)
-    window.blit(time_surface, time_rect)
+        pygame.display.update()  
 
+    return score  # Retorna o score final antes de sair da função
 
-    pygame.display.update()  # Mostra o novo frame para o jogador
-
+# Chama a função game_screen e captura o score final
+final_score = game_screen(window)
 import tela_final
-tela_final.exibir_tela_final(score)
-pygame.quit()
-
+tela_final.exibir_tela_final(final_score)  
 
 # ===== Finalização =====
 pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
