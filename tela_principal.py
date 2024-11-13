@@ -75,7 +75,7 @@ assets["score_font"] = pygame.font.Font('Fontes/PressStart2P.ttf', 28)
 pygame.mixer.music.load('snd/somprincipal.ogg')
 pygame.mixer.music.set_volume(0.4)
 boom_sound = pygame.mixer.Sound('snd/expl3.wav')
-destroy_sound = pygame.mixer.Sound('snd/expl6.wav')
+assets['destroy_sound'] = pygame.mixer.Sound('snd/expl6.wav')
 colisao = pygame.mixer.Sound('snd/crash.ogg')
 assets['pew_sound'] = pygame.mixer.Sound('snd/pew.wav')
 assets['boom_sound'] = pygame.mixer.Sound('snd/expl3.wav')
@@ -345,9 +345,7 @@ while state != DONE:
         hits = pygame.sprite.groupcollide(all_aliens, all_bullets, True, True)
         for alien in hits: # As chaves são os elementos do primeiro grupo (aliens) que colidiram com alguma bala
             # O alien e destruido e precisa ser recriado
-            #----------------------COLOCA SOM------------------
-            # assets['destroy_sound'].play()
-            #----------------------COLOCA SOM-------------------
+            assets['destroy_sound'].play()
             a = Alien(assets)
             all_sprites.add(a)
             all_aliens.add(a)
@@ -358,8 +356,13 @@ while state != DONE:
 
             # Ganhou pontos!
             score += 100
+        
+        # Verifica se houve colisão entre tiros e meteoros
+        bullet_hits_meteors = pygame.sprite.groupcollide(all_bullets, meteoros, True, False)
+        for bullet in bullet_hits_meteors:
+            bullet.kill()  # Remove o tiro visualmente
 
-        # Verifica se houve colisão entre Asteroide e o Alien
+        # Verifica se houve colisão entre meteoro e o nave
         colisao_meteoros = pygame.sprite.spritecollide(player, meteoros, True)
         if len(colisao_meteoros) > 0:
             # Toca o som da colisão
