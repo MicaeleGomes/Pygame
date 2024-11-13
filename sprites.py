@@ -91,14 +91,6 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
 
-        # Se o alien passar do final da tela, volta para cima e sorteia
-        # novas posições e velocidades
-        if self.rect.top > HEIGHT or self.rect.right < 0 or self.rect.left > WIDTH:
-            self.rect.x = random.randint(0, WIDTH-ALIEN_WIDTH)
-            self.rect.y = random.randint(-100, -ALIEN_HEIGHT)
-            self.speedx = random.randint(-3, 4)
-            self.speedy = random.randint(2, 9)
-
 # Classe Bullet que representa os tiros
 class Bullet(pygame.sprite.Sprite):
     # Construtor da classe.

@@ -107,12 +107,12 @@ def game_screen(window):
                 # Ganhou pontos!
                 score += 100
 
-            # Atualize o score se o alien passar da borda da tela
+            # Atualiza o score se o alien passar da borda da tela
             for alien in all_aliens:
-                if alien.rect.top > HEIGHT:  
+                if alien.rect.top > HEIGHT:
                     score -= 100  
                     alien.kill() 
-                    # Reposicione um novo alien
+                    # Reposicionando um novo alien
                     a = Alien(assets)
                     all_sprites.add(a)
                     all_aliens.add(a)
