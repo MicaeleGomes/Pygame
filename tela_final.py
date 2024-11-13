@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 import random
 
 pygame.init()
@@ -10,56 +11,43 @@ def exibir_tela_final(score):
     janela = pygame.display.set_mode((largura, altura))
     pygame.display.set_caption('Ameaça Interestelar')
 
-    font_path = 'Fontes/PressStart2P-Regular.ttf'  # Caminho do arquivo da fonte
-    font = pygame.font.Font(font_path, 50)  # Tamanho da fonte (50 aqui)
+    font_path = os.path.join('assets', 'font', 'PressStart2P-Regular.ttf')
+    font = pygame.font.Font(font_path, 50)  # Tamanho da fonte
 
     #--------Imagem utilizada no botão + coordenada do botão.
     botao = pygame.font.Font(font_path, 50)
     texto_botao = "Play"
 
     #Substituição do ícone do pygame pelo ícone de "Ameaça Interestelar"
-    icone = pygame.image.load("imagens/logo.png")
+    icone = pygame.image.load(os.path.join('assets', 'img', 'logo.png'))
     pygame.display.set_icon(icone)
 
     cor_fonte = (255, 255, 255)
 
     texto_ameaca = "Sua pontuação:" 
-
     texto_renderizado = font.render(texto_ameaca, True, cor_fonte)
 
 
     pos_x = (largura - texto_renderizado.get_width()) // 2  
     pos_y = (altura // 2) - 100  
-
     pos_y2 = pos_y + texto_renderizado.get_height() + 10  
 
 
-    pygame.mixer.music.load('snd/1_lift_off.flac')  
+    # pygame.mixer.music.load('snd/1_lift_off.flac')  
+    pygame.mixer.music.load(os.path.join('assets', 'snd', '1_lift_off.flac'))
     pygame.mixer.music.set_volume(0.4)        
     pygame.mixer.music.play(-1, 0.0)          
 
 
     #--------Imagem de fundo do jogo
-    tela_de_fundo = pygame.image.load("imagens/SpaceBackGround.jpg")
-    try:
-        with open('score.txt', 'r') as file:
-            score = int(file.read())  
-    except FileNotFoundError:
-        score = 0
+    tela_de_fundo = pygame.image.load(os.path.join('assets', 'img', 'SpaceBackGround.jpg'))
 
     texto_interestelar = f"{score}"
 
     texto_renderizado2 = font.render(texto_interestelar, True, cor_fonte)
-
-    texto_renderizado2 = font.render(texto_interestelar, True, cor_fonte)
-
     pos_x2 = (largura - texto_renderizado2.get_width()) // 2  
 
-
-
-
     game = True
-
 
     #--------Define a quantidade de meteoros.
 
