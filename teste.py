@@ -19,14 +19,16 @@ while state != QUIT:
         state = init_screen(window)
     elif state == GAME:
         # Tela de jogo
-        score = game_screen(window)  # Captura o score ao final do jogo
-        state = QUIT  # Finaliza o estado do jogo, pois o jogo terminou
+        state = game_screen(window)
     else:
         # Quando o estado for QUIT, a execução do jogo termina
         state = QUIT
 
-# Exibe a tela final com o score
-tela_final.exibir_tela_final(score)  # Exibe a tela final com a pontuação
+# Chama a função game_screen e captura o score final, apenas após a tela de jogo
+final_score = game_screen(window)
+
+# Exibe a tela final com a pontuação
+tela_final.exibir_tela_final(final_score)
 
 # Finaliza o Pygame
 pygame.quit()
