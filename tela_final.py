@@ -10,7 +10,7 @@ def exibir_tela_final(window, score):
     pygame.display.set_caption('Ameaça Interestelar')
 
     font_path = os.path.join('assets', 'font', 'PressStart2P-Regular.ttf')
-    font = pygame.font.Font(font_path, 50)  # Tamanho da fonte
+    font = pygame.font.Font(font_path, 20)  # Tamanho da fonte
 
     # Texto que mostra a pontuação
     texto_ameaca = "Sua pontuação:" 
