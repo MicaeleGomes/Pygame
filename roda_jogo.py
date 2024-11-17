@@ -2,7 +2,7 @@ import pygame
 from config import WIDTH, HEIGHT, INIT, QUIT, GAME
 from game_screen import game_screen
 from init_screen import init_screen
-import tela_final  # Importando a tela final
+from tela_final import exibir_tela_final  # Importando a tela final
 
 pygame.init()
 pygame.mixer.init()
@@ -15,20 +15,14 @@ state = INIT
 
 while state != QUIT:
     if state == INIT:
-        # Tela inicial chamada uma vez
+        # Tela inicial
         state = init_screen(window)
     elif state == GAME:
         # Tela de jogo
-        state = game_screen(window)
+        score = game_screen(window)
+        state = exibir_tela_final(window, score)  # Chama a tela final com o score
     else:
-        # Quando o estado for QUIT, a execução do jogo termina
-        state = QUIT
+        state = QUIT  # Sai do jogo
 
-# Chama a função game_screen e captura o score final, apenas após a tela de jogo
-final_score = game_screen(window)
-
-# Exibe a tela final com a pontuação
-tela_final.exibir_tela_final(final_score)
-
-# Finaliza o Pygame
 pygame.quit()
+
