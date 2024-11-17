@@ -17,8 +17,7 @@ PEW_SOUND = 'pew_sound'
 TIMER_ICON_IMG = 'timer_icon'
 ALIEN_ICON_IMG = 'alien_icon'
 LOGO_PRINCIPAL = 'logo_principal'  
-
-
+SHIP_FINAL = 'nave_telafinal'
 
 def load_assets():
     assets = {}
@@ -33,6 +32,7 @@ def load_assets():
     assets[METEOR_IMG] = pygame.image.load(os.path.join(IMG_DIR, 'astroid.png')).convert_alpha()
     assets[METEOR_IMG] = pygame.transform.scale(assets[METEOR_IMG], (largura_meteoro, altura_meteoro))
     assets[LOGO_PRINCIPAL] = pygame.image.load(os.path.join(IMG_DIR, 'logo_principal.PNG')).convert_alpha()
+    assets[SHIP_FINAL] = pygame.image.load(os.path.join(IMG_DIR, 'nave_telafinal.png')).convert_alpha()
 
     # Ícones do temporizador e do alien para o placar
     assets[TIMER_ICON_IMG] = pygame.image.load(os.path.join(IMG_DIR, 'timer_pygame.png')).convert_alpha()

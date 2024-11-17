@@ -16,6 +16,11 @@ def init_screen(screen):
     # Carrega os assets
     assets = load_assets() 
 
+    # Carrega a música de fundo
+    pygame.mixer.music.load(os.path.join('assets', 'snd', '1_lift_off.flac'))
+    pygame.mixer.music.set_volume(0.4)        
+    pygame.mixer.music.play(-1, 0.0)
+
     # Acessa a imagem de fundo 
     background = assets['background']
     background = pygame.transform.scale(background, (WIDTH, HEIGHT))  # Ajusta o fundo ao tamanho da tela

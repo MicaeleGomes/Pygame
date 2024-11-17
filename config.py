@@ -15,7 +15,7 @@ SCORE_BOX_WIDTH = 250  # Largura da caixinha
 SCORE_BOX_HEIGHT = 40  # Altura da caixinha
 SCORE_POSITION = (20, 20)  # Posição da caixinha
 SCORE_COLOR = (255, 255, 255)  # Cor do texto
-SCORE_BG_COLOR = (100, 100, 200)  # Cor de fundo da caixinha
+SCORE_BG_COLOR = (118, 39, 139)  # Cor de fundo da caixinha
 
 # Define tamanhos
 ALIEN_WIDTH = 100
