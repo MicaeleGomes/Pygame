@@ -35,7 +35,7 @@ def exibir_tela_final(window, score):
     pos_x2 = (largura - texto_renderizado2.get_width()) // 2  
 
     # Texto para reiniciar o jogo
-    texto_reiniciar = "Aperte ENTER para jogar novamente"
+    texto_reiniciar = "Press ENTER"
     texto_renderizado_reiniciar = font.render(texto_reiniciar, True, (255, 255, 255))
     pos_x_reiniciar = (largura - texto_renderizado_reiniciar.get_width()) // 2  
     pos_y_reiniciar = pos_y2 + texto_renderizado2.get_height() + 10
