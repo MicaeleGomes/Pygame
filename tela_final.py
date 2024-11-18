@@ -84,11 +84,12 @@ def exibir_tela_final(window, score):
 
         # Desenha as instruções
         y_atual_instrucoes = y_instrucoes
+        espaçamento_linhas = 10
         for linha in textwrap.wrap(texto_instrucoes, width=30):
             instrucoes_renderizadas = font_small.render(linha, True, cor_fonte_branca)
             instrucoes_x = (WIDTH - instrucoes_renderizadas.get_width()) // 2
             window.blit(instrucoes_renderizadas, (instrucoes_x, y_atual_instrucoes))
-            y_atual_instrucoes += font_small.get_height()
+            y_atual_instrucoes += font_small.get_height() + espaçamento_linhas
 
         pygame.display.update()
         clock.tick(60)
