@@ -17,7 +17,7 @@ def init_screen(screen):
     assets = load_assets() 
 
     # Carrega a música de fundo
-    pygame.mixer.music.load(os.path.join('assets', 'snd', '1_lift_off.flac'))
+    pygame.mixer.music.load(os.path.join('assets', 'snd', 'BTC.mp3'))
     pygame.mixer.music.set_volume(0.4)        
     pygame.mixer.music.play(-1, 0.0)
 
@@ -75,9 +75,9 @@ def init_screen(screen):
                 state = QUIT
                 running = False
 
-            if event.type == pygame.KEYUP:
-                state = GAME
-                running = False
+            if event.type == pygame.KEYDOWN:
+                state = GAME  # Altera o estado para o jogo
+                running = False  # Encerra a tela inicial
 
         # Redesenha o fundo e os elementos
         screen.fill(BLACK)

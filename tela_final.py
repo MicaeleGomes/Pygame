@@ -2,6 +2,8 @@ import pygame
 import os
 import textwrap
 from config import WIDTH, HEIGHT, GAME, QUIT, BLACK
+from init_screen import init_screen
+
 
 def exibir_tela_final(window, score):
     pygame.display.set_caption('Ameaça Interestelar')
@@ -24,10 +26,10 @@ def exibir_tela_final(window, score):
 
     # Textos
     titulo = "Sua Pontuação"
-    texto_instrucoes = "Pressione ENTER para jogar novamente ou ESC para sair"
+    texto_instrucoes = "Pressione ENTER para jogar novamente, ESC para sair ou SPACE para voltar a incial"
 
     # Configura a música de fundo
-    pygame.mixer.music.load(os.path.join('assets', 'snd', '1_lift_off.flac'))
+    pygame.mixer.music.load(os.path.join('assets', 'snd', 'BTC.mp3'))
     pygame.mixer.music.set_volume(0.4)        
     pygame.mixer.music.play(-1, 0.0)
 
@@ -56,6 +58,13 @@ def exibir_tela_final(window, score):
                 if event.key == pygame.K_ESCAPE:
                     pygame.mixer.music.stop()  # Para a música ao sair
                     return QUIT
+                if event.key == pygame.K_SPACE:
+                    pygame.mixer.music.stop()  # Para a música ao voltar à tela inicial
+                    state = init_screen(window)  # Chama a tela inicial
+                    if state == QUIT:  # Se o usuário escolher sair
+                        return QUIT
+                    elif state == GAME:  # Se o usuário iniciar o jogo
+                        return GAME
 
         # Desenha o fundo
         window.blit(tela_de_fundo, (0, 0))

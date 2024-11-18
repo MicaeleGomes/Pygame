@@ -18,6 +18,7 @@ TIMER_ICON_IMG = 'timer_icon'
 ALIEN_ICON_IMG = 'alien_icon'
 LOGO_PRINCIPAL = 'logo_principal'  
 SHIP_FINAL = 'nave_telafinal'
+MAIN_SOUND = 'main_sound'
 
 def load_assets():
     assets = {}
@@ -53,11 +54,14 @@ def load_assets():
     assets[SCORE_FONT] = pygame.font.Font(os.path.join(FNT_DIR, 'PressStart2P.ttf'), 28)
 
     #Carrega os sons do jogo
-    pygame.mixer.music.load(os.path.join(SND_DIR, 'somprincipal.ogg'))
+    pygame.mixer.music.load(os.path.join(SND_DIR, 'uber.wav'))
     pygame.mixer.music.set_volume(0.4)
     assets[BOOM_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'expl3.wav'))
     assets[DESTROY_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'expl6.wav'))
     assets[COLISAO_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'crash.ogg'))
-    assets[PEW_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'pew.wav'))
+    assets[PEW_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'laser1.mp3'))
+    assets[MAIN_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'TCU.ogg'))
+
+
 
     return assets
