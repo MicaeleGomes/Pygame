@@ -66,6 +66,7 @@ def game_screen(window):
                         player.shoot()
                 if event.type == pygame.KEYUP:
                     if event.key in keys_down:
+                        del keys_down[event.key]  
                         if event.key == pygame.K_LEFT:
                             player.speedx += 9
                         if event.key == pygame.K_RIGHT:
@@ -79,7 +80,6 @@ def game_screen(window):
             # Verifica colisões entre tiro e alien
             hits = pygame.sprite.groupcollide(all_aliens, all_bullets, True, True, pygame.sprite.collide_mask)
             for alien in hits:
-                # assets['pew_sound'].play()
                 assets['destroy_sound'].play()
                 a = Alien(assets)
                 all_sprites.add(a)
@@ -126,6 +126,8 @@ def game_screen(window):
             if now - explosion_tick > explosion_duration:
                 state = PLAYING
                 player = Ship(groups, assets)
+                player.speedx = 0  # Zera a velocidade ao recriar a nave
+                keys_down = {}     # Limpa o estado das teclas pressionadas
                 all_sprites.add(player)
 
         # Calcula o tempo restante
