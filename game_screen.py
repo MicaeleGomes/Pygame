@@ -79,7 +79,8 @@ def game_screen(window):
             # Verifica colisões entre tiro e alien
             hits = pygame.sprite.groupcollide(all_aliens, all_bullets, True, True, pygame.sprite.collide_mask)
             for alien in hits:
-                assets['pew_sound'].play()
+                # assets['pew_sound'].play()
+                assets['destroy_sound'].play()
                 a = Alien(assets)
                 all_sprites.add(a)
                 all_aliens.add(a)
