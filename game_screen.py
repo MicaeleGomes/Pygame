@@ -43,8 +43,7 @@ def game_screen(window):
     state = PLAYING
 
     keys_down = {}
-    # GAME_DURATION = 60000  # 60 segundos
-    GAME_DURATION = 10000  # 60 segundos
+    GAME_DURATION = 60000  # 60 segundos
     start_time = pygame.time.get_ticks()
 
     pygame.mixer.music.play(loops=-1)
