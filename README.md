@@ -1,48 +1,63 @@
+# Ameaça Interestelar 🚀
 
-# Ameaça interestelar
+**Ameaça Interestelar** é um jogo de ação onde o jogador controla uma nave espacial com o objetivo de defender o universo contra uma invasão alienígena. O jogo combina reflexos rápidos e estratégia ao enfrentar ondas de inimigos que se tornam progressivamente mais desafiadoras. Além dos alienígenas, asteroides surgem como obstáculos aleatórios, tornando o ambiente espacial ainda mais imprevisível.
 
-O jogador controla uma nave espacial com o objetivo de defender o universo de uma invasão alienígena. A missão principal é destruir as naves alienígenas que surgem em ondas, cada vez mais rápidas e em maior número, vindas de um universo paralelo. Além disso, o jogador precisa evitar asteroides que aparecem aleatoriamente na tela e representam um perigo natural no espaço, tornando o ambiente de jogo mais desafiador.
+---
 
-## Autores
+## 👩‍💻 Autores
 
-- [@mearramos](https://www.github.com/mearramos): Maria Eduarda Ramos Silva
-- [@MicaeleGomes](https://github.com/MicaeleGomes): Micaele Gomes
+Projeto desenvolvido por:
 
+- [@mearramos](https://github.com/mearramos): Maria Eduarda Ramos Silva  
+- [@MicaeleGomes](https://github.com/MicaeleGomes): Micaele Gomes  
 
-## Como rodar o código?
+---
 
-Para o pleno funcionamento de AMEAÇA INTERESTELAR, é importante que o usuário rode o jogo a partir do file "roda_jogo" e siga as instruções fornecidas para as teclas de transições das telas. 
+## 🚀 Como Rodar o Jogo?
 
-## Demonstração + link
+1. Instale o Python, se ainda não estiver no sistema. Acesse [python.org](https://www.python.org/downloads/) para baixar.
+2. Instale a biblioteca **Pygame** executando:
+   ```bash
+   pip install pygame
+3. Na pasta do projeto, execute o arquivo principal:
+   ```bash
+   python roda_jogo.py
+3. Siga as instruções fornecidas nas telas para jogar.
 
-*Insira um gif ou um link de alguma demonstração*
+---
 
+## 🎮 Mecânicas do Jogo
 
-## Referência
+- **Pontuação**: Ganhe **100 pontos** ao destruir alienígenas.
+- **Penalidades**: Perda de **100 pontos** se um alienígena escapa ou **200 pontos** ao colidir com um asteroide.
+- **Objetivo**: Obter a maior pontuação possível enquanto sobrevive às ondas crescentes de inimigos e obstáculos.
 
- - [PressStart2P | Google Fonts](https://github.com/matiassingers/awesome-readme)
- - [Docs | Pygame](https://www.pygame.org/docs/)
+---
 
+## 🎥 Demonstração
 
-## FAQ
+*Insira aqui um gif ou link de demonstração do jogo.*
 
-#### Como ganhar pontos?
+---
 
-O jogador pode ganhar pontos atingindo aliens (100 pontos).
+## 📚 Referências
 
-#### Como perder pontos?
+- [PressStart2P | Google Fonts](https://fonts.google.com/specimen/Press+Start+2P)
+- [Docs | Pygame](https://www.pygame.org/docs/)
 
-O jogador pode perder pontos quando não atinge um alien (50 pontos) ou quando um asteroide colide contra a nave (200 pontos).
+---
 
-#### Há limite um limite de quantos asteroides podem bater na nave?
+## ❓ FAQ
 
-Não há um limite de quantos asteroides podem colidir contra a nave, mas vale ressaltar que pontos são retirados do seu score ao colidir contra asteroides. 
+**Quais são as principais formas de pontuar?**  
+Destruir naves alienígenas gera **100 pontos** por alienígena destruído.
 
-#### Há de quantos aliens podem ser perdidos?
+**Como os pontos são perdidos?**  
+- **100 pontos** são subtraídos para cada alienígena que escapa da tela.  
+- **200 pontos** são subtraídos por colisões com asteroides.
 
-Não há um limite para quantos aliens podem ser perdidos, mas, assim como nos asteroides, pontos serão cobrados por cada alien que não for capturado. 
+**Há limite para colisões ou aliens perdidos?**  
+Não há limites, mas cada erro afeta a pontuação final, tornando a sobrevivência mais desafiadora.
 
-
-
-![Logo](imagens/images.png)
+![Logo](assets/img/Logo_Insper.png)
 
