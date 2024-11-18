@@ -59,7 +59,7 @@ def load_assets():
     assets[BOOM_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'expl3.wav'))
     assets[DESTROY_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'expl6.wav'))
     assets[COLISAO_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'crash.ogg'))
-    assets[PEW_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'tirolaser.mp3'))
+    assets[PEW_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'laser2.wav'))
     assets[MAIN_SOUND] = pygame.mixer.Sound(os.path.join(SND_DIR, 'TCU.ogg'))
 
 
