@@ -6,8 +6,8 @@
 
 Projeto desenvolvido por:
 
-- [@mearramos](https://github.com/mearramos): Maria Eduarda Ramos Silva  
-- [@MicaeleGomes](https://github.com/MicaeleGomes): Micaele Gomes  
+- [@MicaeleGomes](https://github.com/MicaeleGomes): Micaele Gomes 
+- [@mearramos](https://github.com/mearramos): Maria Eduarda Ramos Silva   
 
 ## 🚀 Como Rodar o Jogo?
 
